@@ -81,6 +81,9 @@
     "valarray": "cpp",
     "qfiledialog": "cpp",
     "qstring": "cpp",
-    "qvector": "cpp"
+    "qvector": "cpp",
+    "qdebug": "cpp",
+    "qimage": "cpp",
+    "qvector3d": "cpp"
   }
 }

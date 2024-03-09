@@ -3,8 +3,6 @@ project(delaunay)
 
 # set(ROS_VERSION $ENV{ROS_DISTRO})
 # include(FindPkgConfig)
-
-# include(FindLibXml2 REQUIRED)
 # find_package(REQUIRED COMPONENTS
 # )
 set(CMAKE_AUTOMOC ON)

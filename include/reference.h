@@ -1,12 +1,21 @@
-#ifndef SORT_H
-#define SORT_H
+#ifndef REFORENCE_H
+#define REFORENCE_H
 #include <QVector>
 #include <QDebug>
-#include <QVector3D>
-#include <QImage>
-
+#include <GL/gl.h>
+#include <GL/glu.h>
+#include <GL/glaux.h>
+#include <QDebug>
+#include <QGLFunctions>
+#include <QFileInfo>
 #include <cmath>
-
+#include <QTimer>
+#include <QPainter>
+#include <QPaintEvent>
+#include <QFont>
+#include <QGLFramebufferObject>
+#include <QVector3D>
+#include <QQueue>
 #define PAI 3.1415
 class Point
 {
@@ -42,7 +51,7 @@ class Point
   {
     qDebug( ) << "(" << x << "," << y << "," << z << ")";
   }
-}; // end: class point
+};
 class vec3
 { // 向量
  public:
@@ -84,8 +93,7 @@ class vec3
   {
     return vec3(x - p1.x, y - p1.y, z - p1.z);
   }
-}; // end: class vec3
-
+};
 struct Line
 {
   Point p1, p2; // 有向线段，p1指向p2
@@ -106,12 +114,12 @@ struct Line
   }
 };
 
+
 class Gemetry
 {
  public:
   Gemetry( ) {}
-  // 计算平面的法线(ab为平面上的两条不平行的向量)
-  static vec3 Cross(vec3 a, vec3 b)
+  static vec3 Cross(vec3 a, vec3 b) // 法线
   {
     float x = a.y * b.z - a.z * b.y;
     float y = a.z * b.x - a.x * b.z;
@@ -143,16 +151,14 @@ class Gemetry
   {
     vec3 ab(l.p1, l.p2);
     vec3 ac(l.p1, p);
-    // d = (AB x AC)/|AB| ,|AB X AC|/2是三角形ABC的面积，这个三角形的底是|AB|，高就是C到AB的距离
-    return Norm(Cross(ab, ac)) / PointToPoint(l.p1, l.p2);
+    return Norm(Cross(ab, ac)) / PointToPoint(l.p1, l.p2); // d = (AB x AC)/|AB| ,|AB X AC|/2是三角形ABC的面积，这个三角形的底是|AB|，高就是C到AB的距离
   }
-  static float angle(float x1, float y1, float x2, float y2)
-  {
-    float n = (x1 * x2 + y1 * y2);
-    float m = sqrt(x1 * x1 + y1 * y1) * sqrt(x2 * x2 + y2 * y2);
-    return acos(n / m) * 180 / PAI;
-  }
-  // ∠ABC的大小
+
+  //    static float angle(float x1,float y1, float x2,float y2){
+  //        float n = (x1*x2+y1*y2);
+  //        float m = sqrt(x1*x1+y1*y1)*sqrt(x2*x2+y2*y2);
+  //        return acos(n/m)*180/PAI;
+  //    }
   static float angle3D(Point a, Point b, Point c)
   {
     vec3 v1(a - b);
@@ -226,7 +232,6 @@ class Gemetry
       miny = line.p2.y;
       maxy = line.p1.y;
     }
-
     if (fabs(tmp) <= 1e-5 && pt.x > minx && pt.x < maxx && pt.y > miny && pt.y < maxy) // 大于0在右边
     {
       return true;
@@ -236,8 +241,7 @@ class Gemetry
       return false;
     }
   }
-}; // end: gemetry
-
+};
 struct Triangle
 {
   Point p1, p2, p3; // 三个点
@@ -252,9 +256,7 @@ struct Triangle
     bool r2 = Gemetry::IsRightPoint(a, l2);
     bool r3 = Gemetry::IsRightPoint(a, l3);
     if (r1 == r2 && r2 == r3)
-    {
       return true;
-    }
     return false;
   }
   int isOnTriangle(Point a)
@@ -263,17 +265,11 @@ struct Triangle
     bool r2 = Gemetry::IsOnLine(a, l2);
     bool r3 = Gemetry::IsOnLine(a, l3);
     if (r1)
-    {
       return 1;
-    }
     if (r2)
-    {
       return 2;
-    }
     if (r3)
-    {
       return 3;
-    }
     return 0;
   }
 
@@ -292,8 +288,6 @@ struct Triangle
     l[1] = l2;
     l[2] = l3;
   }
-
-  // return index of line
   int containsLine(Line l)
   {
     if ((l.p1 == p1 && l.p2 == p2) || (l.p1 == p2 && l.p2 == p1))
@@ -318,8 +312,7 @@ struct Triangle
     }
     return false;
   }
-}; // end: triangle
-
+};
 struct Circle
 {
   double radius;
@@ -330,7 +323,6 @@ struct Circle
     center = cent;
     radius = r;
   }
-  // 求外接圆
   static Circle genTriCircle(Triangle tri)
   {
     Point p1 = tri.p1;
@@ -368,11 +360,13 @@ struct Circle
   }
 };
 
+
+
 class Sort
 {
  public:
   Sort( );
-  // 快速排序算法（Quick Sort）
+
   static void quickSort(QVector<float> &a, int left, int right, bool (*cmp)(float, float))
   {
     if (left < right)
@@ -381,36 +375,22 @@ class Sort
       int j      = right;
       float temp = a[left];
       if (left >= right)
-      {
         return;
-      }
       while (i < j)
       {
         while (i < j && cmp(temp, a[j]))
-        {
           j--;
-        }
-        // a[i]已经赋值给temp,所以直接将a[j]赋值给a[i],赋值完之后a[j],有空位
         if (j > i)
-        {
-          a[i++] = a[j];
-        }
+          a[i++] = a[j]; // a[i]已经赋值给temp,所以直接将a[j]赋值给a[i],赋值完之后a[j],有空位
         while (i < j && cmp(a[i], temp))
-        {
           i++;
-        }
         if (i < j)
-        {
           a[j--] = a[i];
-        }
-      } // end while:
-      // 把基准插入,此时i与j已经相等R[low..pivotpos-1].keys≤R[pivotpos].key≤R[pivotpos+1..high].keys
-      a[i] = temp;
-      /*递归左边*/
-      quickSort(a, left, i - 1, cmp);
-      /*递归右边*/
-      quickSort(a, i + 1, right, cmp);
-    } // endif: if ascendent, do nothing
+      }
+      a[i] = temp;                     // 把基准插入,此时i与j已经相等R[low..pivotpos-1].keys≤R[pivotpos].key≤R[pivotpos+1..high].keys
+      quickSort(a, left, i - 1, cmp);  /*递归左边*/
+      quickSort(a, i + 1, right, cmp); /*递归右边*/
+    }
   }
   static void quickSort(QVector<Point> &a, int left, int right, bool (*cmp)(Point, Point))
   {
@@ -424,90 +404,42 @@ class Sort
       while (i < j)
       {
         while (i < j && cmp(temp, a[j]))
-        {
           j--;
-        }
-        // a[i]已经赋值给temp,所以直接将a[j]赋值给a[i],赋值完之后a[j],有空位
         if (j > i)
-        {
-          a[i++] = a[j];
-        }
+          a[i++] = a[j]; // a[i]已经赋值给temp,所以直接将a[j]赋值给a[i],赋值完之后a[j],有空位
         while (i < j && cmp(a[i], temp))
-        {
           i++;
-        }
         if (i < j)
-        {
           a[j--] = a[i];
-        }
       }
-      // 把基准插入,此时i与j已经相等R[low..pivotpos-1].keys≤R[pivotpos].key≤R[pivotpos+1..high].keys
-      a[i] = temp;
-      /*递归左边*/
-      quickSort(a, left, i - 1, cmp);
-      /*递归右边*/
-      quickSort(a, i + 1, right, cmp);
+      a[i] = temp;                     // 把基准插入,此时i与j已经相等R[low..pivotpos-1].keys≤R[pivotpos].key≤R[pivotpos+1..high].keys
+      quickSort(a, left, i - 1, cmp);  /*递归左边*/
+      quickSort(a, i + 1, right, cmp); /*递归右边*/
     }
   }
-}; // end: sort
-
-class Image
+};
+// 导入纹理
+class texture : public QGLWidget, protected QGLFunctions
 {
  public:
-  static int getIndex(int i, int width)
+  static void loadTexture(QString filepath, GLuint *texture)
   {
-    if (i < 0)
+    QImage tex, buf;
+
+    if (!buf.load(filepath))
     {
-      i = 0;
+      printf("Error: failed to load image!");
+      exit(1);
     }
-    if (i >= width)
-    {
-      i = width - 1;
-    }
-    return i;
+
+    tex = convertToGLFormat(buf);
+    glGenTextures(1, texture);
+
+    glBindTexture(GL_TEXTURE_2D, *texture);
+
+    glTexImage2D(GL_TEXTURE_2D, 0, 4, tex.width( ), tex.height( ), 0, GL_RGBA, GL_UNSIGNED_BYTE, tex.bits( ));
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR_MIPMAP_LINEAR);
   }
-  static QImage TransToEdge(const QImage &source)
-  {
-    int w    = source.width( );
-    int h    = source.height( );
-    int Gmax = 140;
-    QImage Edge(w, h, QImage::Format_RGB32);
-
-    for (int i = 0; i < h; i++)
-    {
-      // 卷积操作
-      for (int j = 0; j < w; j++)
-      {
-        double Gx = (-1) * QColor(source.pixel(getIndex(j - 1, w), getIndex(i - 1, h))).red( )
-                    + (-2) * QColor(source.pixel(getIndex(j, w), getIndex(i - 1, h))).red( )
-                    + (-1) * QColor(source.pixel(getIndex(j + 1, w), getIndex(i - 1, h))).red( )
-                    + QColor(source.pixel(getIndex(j - 1, w), getIndex(i + 1, h))).red( )
-                    + 2 * QColor(source.pixel(getIndex(j, w), getIndex(i + 1, h))).red( )
-                    + QColor(source.pixel(getIndex(j + 1, w), getIndex(i + 1, h))).red( );
-
-        double Gy = QColor(source.pixel(getIndex(j - 1, w), getIndex(i - 1, h))).red( )
-                    + (2) * QColor(source.pixel(getIndex(j - 1, w), getIndex(i, h))).red( )
-                    + (1) * QColor(source.pixel(getIndex(j - 1, w), getIndex(i + 1, h))).red( )
-                    + (-1) * QColor(source.pixel(getIndex(j + 1, w), getIndex(i - 1, h))).red( )
-                    + (-2) * QColor(source.pixel(getIndex(j + 1, w), getIndex(i, h))).red( )
-                    + (-1) * QColor(source.pixel(getIndex(j + 1, w), getIndex(i + 1, h))).red( );
-
-        double G = sqrt(Gx * Gx + Gy * Gy);
-
-        QRgb pixel;
-        if (G > Gmax)
-        {
-          pixel = qRgb(255, 255, 255);
-        }
-        else
-        {
-          pixel = qRgb(0, 0, 0);
-        }
-        Edge.setPixel(j, i, pixel);
-      }
-    }
-    return Edge;
-  }
-}; // end: image
-
-#endif // SORT_H
+};
+#endif // REFORENCE_H
