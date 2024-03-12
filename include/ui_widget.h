@@ -1,11 +1,3 @@
-/********************************************************************************
-** Form generated from reading UI file 'widget.ui'
-**
-** Created by: Qt User Interface Compiler version 5.12.8
-**
-** WARNING! All changes made in this file will be lost when recompiling UI file!
-********************************************************************************/
-
 #ifndef UI_WIDGET_H
 #define UI_WIDGET_H
 
@@ -23,7 +15,7 @@ QT_BEGIN_NAMESPACE
 
 class Ui_Widget
 {
-public:
+ public:
   QTabWidget *tabWidget;
   QWidget *tab;
   QHBoxLayout *horizontalLayout_5;
@@ -47,19 +39,19 @@ public:
 
   void setupUi(QWidget *Widget)
   {
-    if (Widget->objectName().isEmpty())
+    if (Widget->objectName( ).isEmpty( ))
       Widget->setObjectName(QString::fromUtf8("Widget"));
     Widget->resize(586, 300);
     tabWidget = new QTabWidget(Widget);
     tabWidget->setObjectName(QString::fromUtf8("tabWidget"));
     tabWidget->setGeometry(QRect(10, 30, 669, 120));
-    tab = new QWidget();
+    tab = new QWidget( );
     tab->setObjectName(QString::fromUtf8("tab"));
     horizontalLayout_5 = new QHBoxLayout(tab);
     horizontalLayout_5->setSpacing(6);
     horizontalLayout_5->setContentsMargins(11, 11, 11, 11);
     horizontalLayout_5->setObjectName(QString::fromUtf8("horizontalLayout_5"));
-    horizontalLayout_4 = new QHBoxLayout();
+    horizontalLayout_4 = new QHBoxLayout( );
     horizontalLayout_4->setSpacing(6);
     horizontalLayout_4->setObjectName(QString::fromUtf8("horizontalLayout_4"));
     label = new QLabel(tab);
@@ -70,17 +62,17 @@ public:
     horizontalLayout_4->addWidget(label);
 
     comboBox = new QComboBox(tab);
-    comboBox->addItem(QString());
-    comboBox->addItem(QString());
-    comboBox->addItem(QString());
-    comboBox->addItem(QString());
+    comboBox->addItem(QString( ));
+    comboBox->addItem(QString( ));
+    comboBox->addItem(QString( ));
+    comboBox->addItem(QString( ));
     comboBox->setObjectName(QString::fromUtf8("comboBox"));
 
     horizontalLayout_4->addWidget(comboBox);
 
     horizontalLayout_5->addLayout(horizontalLayout_4);
 
-    horizontalLayout = new QHBoxLayout();
+    horizontalLayout = new QHBoxLayout( );
     horizontalLayout->setSpacing(6);
     horizontalLayout->setObjectName(QString::fromUtf8("horizontalLayout"));
     label_2 = new QLabel(tab);
@@ -116,14 +108,14 @@ public:
 
     horizontalLayout_5->addWidget(label_3);
 
-    tabWidget->addTab(tab, QString());
-    tab_2 = new QWidget();
+    tabWidget->addTab(tab, QString( ));
+    tab_2 = new QWidget( );
     tab_2->setObjectName(QString::fromUtf8("tab_2"));
     horizontalLayout_3 = new QHBoxLayout(tab_2);
     horizontalLayout_3->setSpacing(6);
     horizontalLayout_3->setContentsMargins(11, 11, 11, 11);
     horizontalLayout_3->setObjectName(QString::fromUtf8("horizontalLayout_3"));
-    horizontalLayout_2 = new QHBoxLayout();
+    horizontalLayout_2 = new QHBoxLayout( );
     horizontalLayout_2->setSpacing(6);
     horizontalLayout_2->setObjectName(QString::fromUtf8("horizontalLayout_2"));
     loadBtn = new QPushButton(tab_2);
@@ -157,7 +149,7 @@ public:
 
     horizontalLayout_3->addLayout(horizontalLayout_2);
 
-    tabWidget->addTab(tab_2, QString());
+    tabWidget->addTab(tab_2, QString( ));
 
     retranslateUi(Widget);
 
@@ -174,6 +166,7 @@ public:
     comboBox->setItemText(1, QApplication::translate("Widget", "\345\207\270\345\214\205", nullptr));
     comboBox->setItemText(2, QApplication::translate("Widget", "\345\207\270\345\214\205\345\210\207\345\210\206", nullptr));
     comboBox->setItemText(3, QApplication::translate("Widget", "Delaunay\344\270\211\350\247\222\345\275\242", nullptr));
+    comboBox->setItemText(4, QApplication::translate("Widget", "voronoi points", nullptr));
 
     label_2->setText(QApplication::translate("Widget", "\347\202\271\346\225\260\357\274\232", nullptr));
     colorBtn->setText(QApplication::translate("Widget", "\347\224\237\346\210\220\350\211\262\345\275\251", nullptr));
@@ -191,9 +184,9 @@ public:
 
 namespace Ui
 {
-  class Widget : public Ui_Widget
-  {
-  };
+class Widget : public Ui_Widget
+{
+};
 } // namespace Ui
 
 QT_END_NAMESPACE

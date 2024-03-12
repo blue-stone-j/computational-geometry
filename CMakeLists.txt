@@ -2,7 +2,8 @@ cmake_minimum_required(VERSION 3.10)
 project(delaunay)
 
 # set(ROS_VERSION $ENV{ROS_DISTRO})
-# include(FindPkgConfig)
+include(FindPkgConfig)
+
 # find_package(REQUIRED COMPONENTS
 # )
 set(CMAKE_AUTOMOC ON)
@@ -19,8 +20,13 @@ find_package(Qt5OpenGL REQUIRED)
 
 find_package(GLUT REQUIRED)
 
-# find_package(OpenGL REQUIRED)
-set(CMAKE_CXX_FLAGS "-O2 -Wall -g ${CMAKE_CXX_FLAGS}")
+# set(CMAKE_CXX_FLAGS "-O2 -Wall -g ${CMAKE_CXX_FLAGS}")
+set(CMAKE_BUILD_TYPE "Release")
+set(CMAKE_CXX_FLAGS "-std=c++17")
+set(CMAKE_CXX_FLAGS_RELEASE "-O3 -Wall")
+
+set(CMAKE_CXX_STANDARD 17)
+set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
 EXECUTE_PROCESS(
   COMMAND pkg-config --variable=host_bins Qt5Core
@@ -39,7 +45,7 @@ include_directories(
   ${GLUT_INCLUDE_DIRS}
 )
 
-qt5_wrap_cpp(MOC_FILES include/widget.h)
+qt5_wrap_cpp(MOC_FILES include/widget.h include/ui_widget.h)
 
 # set(EXECUTABLE_OUTPUT_PATH ${CMAKE_CURRENT_SOURCE_DIR})
 add_executable(delaunay
@@ -51,7 +57,6 @@ add_executable(delaunay
   ${MOC_FILES}
 )
 
-# add_dependencies(calibration_publisher        ${catkin_EXPORTED_TARGETS})
 target_link_libraries(delaunay
   ${OPENGL_LIBRARIES}
   ${PCL_LIBRARIES}
@@ -60,3 +65,15 @@ target_link_libraries(delaunay
   Qt5::Gui
   Qt5::Widgets
   Qt5::OpenGL)
+
+# message(FATAL_ERROR ${CMAKE_CURRENT_SOURCE_DIR})
+install(TARGETS delaunay
+  DESTINATION ${CMAKE_CURRENT_SOURCE_DIR}/install
+)
+
+# build
+install(DIRECTORY
+  ${CMAKE_CURRENT_SOURCE_DIR}/asserts
+
+  DESTINATION ${CMAKE_CURRENT_SOURCE_DIR}/install
+)

@@ -76,6 +76,9 @@ class Widget : public QWidget
   QList<Triangle> ImageTins;
   QList<QColor> ImageTinsColor;
   bool isGenTriImg; // whether have generated tri img
+
+  QVector<Point> vpts;  // unused
+  QVector<Line> vlines; // unused
 };
 
 #endif // WIDGET_H

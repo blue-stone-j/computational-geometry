@@ -84,6 +84,7 @@
     "qvector": "cpp",
     "qdebug": "cpp",
     "qimage": "cpp",
-    "qvector3d": "cpp"
+    "qvector3d": "cpp",
+    "qwidget": "cpp"
   }
 }

@@ -27,7 +27,7 @@ class Point
   }
   bool operator==(const Point &p)
   {
-    return fabs(x - p.x) <= 1e-6 && fabs(y - p.y) <= 1e-6 && fabs(z - p.z) <= 1e-6;
+    return fabs(x - p.x) <= 1e-3 && fabs(y - p.y) <= 1e-3 && fabs(z - p.z) <= 1e-3;
   }
   Point operator+(const Point &p1)
   {
@@ -44,7 +44,8 @@ class Point
   }
 }; // end: class point
 class vec3
-{ // 向量
+{
+  // 向量
  public:
   float x, y, z;
   vec3( ) {}
@@ -103,6 +104,10 @@ struct Line
   bool operator==(const Line &l)
   {
     return p1 == l.p1 && p2 == l.p2;
+  }
+  Point center( )
+  {
+    return Point((p1.x + p2.x) / 2, (p1.y + p2.y) / 2, (p1.z + p2.z) / 2);
   }
 };
 
@@ -509,5 +514,18 @@ class Image
     return Edge;
   }
 }; // end: image
+
+
+/**** type conversion *****/
+static Point vec2point(vec3 vec)
+{
+  return Point(vec.x, vec.y, vec.z);
+}
+
+static vec3 point2vec(Point pt)
+{
+  return vec3(pt.x, pt.y, pt.z);
+}
+
 
 #endif // SORT_H

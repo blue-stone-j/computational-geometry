@@ -66,12 +66,6 @@ QList<Triangle> ConvexHull::getDelaunay(QList<Triangle> hulltins, QList<Point> p
     QList<Triangle> delTin; // 保存要删除的三角形
     for (int j = 0; j < hulltins.size( ); j++)
     {
-      //            Circle tinCircle = Circle::genTriCircle(hulltins[j]);
-      //            if(tinCircle.isInCircle(vec3(pts[i])))  //如果当前点在 搜索的三角形的外接圆内
-      //            {
-      //                delTin.push_back(hulltins[j]);
-      //            }
-
       if (hulltins[j].isInTriangle(pts[i]) == true)
       {
         delTin.push_back(hulltins[j]);
@@ -184,67 +178,6 @@ QList<Triangle> ConvexHull::getDelaunay(QList<Triangle> hulltins, QList<Point> p
     {
       hulltins.removeOne(delTin[m]);
     }
-
-    //        else
-    //        {
-    //            QList<Line> borderLines;//寻找离散点的相邻边
-    //            for(int j =0; j< delTin.size(); j++)
-    //            {
-    //                Line l1 = delTin[j].l1;
-    //                Line l2 = delTin[j].l2;
-    //                Line l3 = delTin[j].l3;
-    //                bool repeatLine[3] = {false};
-    //                for( int m = 0; m< delTin.size() ; m++)
-    //                {
-    //                    if(j!=m)
-    //                    {
-    //                        if(delTin[m].containsLine(l1) )
-    //                        {
-    //                            repeatLine[0]  = true;
-    //                        }
-    //                        if(delTin[m].containsLine(l2) )
-    //                        {
-    //                            repeatLine[1]  = true;
-
-    //                        }
-    //                        if(delTin[m].containsLine(l3) )
-    //                        {
-    //                            repeatLine[2]  = true;
-
-    //                        }
-    //                    }
-    //                }
-    //                if(repeatLine[0] == false&&repeatLine[1] == false&&repeatLine[2] == false)
-    //                {
-    //                    if(delTin[j].isInTriangle(pts[i]) == false ){
-    //                        delTin.removeAt(j);
-    //                        j--;
-    //                        continue;
-    //                    }
-    //                }
-    //                if(repeatLine[0] == false)
-    //                    borderLines.push_back(l1);
-    //                if(repeatLine[1] == false)
-    //                    borderLines.push_back(l2);
-    //                if(repeatLine[2] == false)
-    //                    borderLines.push_back(l3);
-    //            }
-
-    //            //        }
-    //            //        QList<Triangle> test;
-    //            for(int j = 0; j< borderLines.size();j++)
-    //            {
-    //                hulltins.push_back(Triangle(borderLines[j].p1,borderLines[j].p2,pts[i]));
-    //            }
-
-    //            //         qDebug()<<"lines  num "<<borderLines.size();
-    //            qDebug()<<"del max "<<delTin.size();
-    //            //                 tins = delTin;
-    //            for( int m = 0; m< delTin.size() ; m++)
-    //            {
-    //                hulltins.removeOne(delTin[m]);
-    //            }
-    //        }
   }
   //    qDebug()<<"online num"<<onLine;
   tins = hulltins;
@@ -290,7 +223,6 @@ void ConvexHull::generateHull(QVector<Point> pts)
   while (i < hullpts.size( ))
   {
     Line cline; // 取凸包的一条线
-
 
     if (i == hullpts.size( ) - 1) // 最后一个点，连接第一个点
     {
@@ -390,45 +322,81 @@ QList<Triangle> ConvexHull::DivideHull(QList<Point> pts)
     //         index = (tag+1)%hpts.size();
   } // endwhile:
 
-  //    for(int j =0; j< tins.size(); j++)
-  //    {
-  //        Line l1 = tins[j].l1;
-  //        Line l2 = tins[j].l2;
-  //        Line l3 = tins[j].l3;
-  //        bool repeatLine[3] = {false};
-  //        Point p1 = tins[j].p3;
-  //        Point p2 = tins[j].p1;
-  //        Point p3 = tins[j].p2;
-  //        for( int m = 0; m< tins.size() ; m++)
-  //        {
-  //            if(j!=m)
-  //            {
-  //                if(tins[m].containsLine(l1) )
-  //                {
-  //                    repeatLine[0]  = true;
-  //                    Circle tricircle = Circle::genTriCircle(tins[m]);
-  //                    if(tricircle.isInCircle(vec3(p1)))
-
-  //                }
-  //                if(tins[m].containsLine(l2) )
-  //                {
-  //                    repeatLine[1]  = true;
-
-  //                }
-  //                if(tins[m].containsLine(l3) )
-  //                {
-  //                    repeatLine[2]  = true;
-
-  //                }
-  //            }
-  //        }
-  //        if(repeatLine[0] == false)
-  //            borderLines.push_back(l1);
-  //        if(repeatLine[1] == false)
-  //            borderLines.push_back(l2);
-  //        if(repeatLine[2] == false)
-  //            borderLines.push_back(l3);
-  //}
-
   return tins;
+}
+
+void ConvexHull::generateVoronoi( )
+{
+  vpts.clear( );
+  vlines.clear( );
+  QList<Triangle> hull = getTins( );
+
+  QQueue<Triangle> tri_que;
+  tri_que.push_back(hull.first( ));
+  hull.removeFirst( );
+  Point vpt0 = vec2point(Circle::genTriCircle(tri_que.front( )).center);
+  vpts.push_back(vpt0);
+
+  QVector<Triangle> tri_visited;
+  int cnt_tri = 1;
+  while (!tri_que.empty( ))
+  {
+    Triangle tri0 = tri_que.front( );
+
+    Point vpt0 = vec2point(Circle::genTriCircle(tri0).center);
+
+    Line l[3];
+    l[0] = tri0.l1;
+    l[1] = tri0.l2;
+    l[2] = tri0.l3;
+
+    bool have_neigh[3] = {false};
+
+    QVector<Triangle> tri_t;
+    for (int m = 0; m < 3; m++)
+    {
+      for (auto it : hull)
+      {
+        if (it == tri0 || it.containsLine(l[m]) == 0)
+        {
+          continue;
+        }
+        have_neigh[m] = true;
+
+        if (std::find(tri_visited.begin( ), tri_visited.end( ), it) == tri_visited.end( ))
+        {
+          Point vpt1 = vec2point(Circle::genTriCircle(it).center);
+          vlines.push_back(Line(vpt0, vpt1));
+          vpts.push_back(vpt1);
+          tri_que.push_back(it);
+          cnt_tri++;
+          // qDebug( ) << cnt_tri << " : " << m << " : " << vpt0.x << " : " << vpt1.x;
+        }
+        break;
+      }
+    }
+    for (int m = 0; m < 3; m++)
+    {
+      if (have_neigh[m])
+      {
+        continue;
+      }
+      // for exclusive lines, add midperpendicular of this line(code commented below is wrong)
+      // Point vpt1 = l[m].center( );
+      // vlines.push_back(Line(vpt0, l[m].center( )));
+    }
+
+    tri_visited.push_back(tri0);
+    tri_que.pop_front( );
+  }
+}
+
+QVector<Line> ConvexHull::getVoronoiLines( )
+{
+  return vlines;
+}
+
+QVector<Point> ConvexHull::getVoronoiPoints( )
+{
+  return vpts;
 }
