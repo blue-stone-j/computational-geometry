@@ -17,6 +17,7 @@ include_directories(
 # set(TARGET_LIBRARIES "")
 # list(APPEND TARGET_LIBRARIES ${PCL_LIBRARIES})
 add_executable(min_arc arc/min_arc/min_arc.cpp)
+add_executable(midpoint_angle arc/midpoint_angle/midpoint_angle.cpp)
 
 add_executable(polyline_simplification polyline_simplification/polyline_simplification.cpp)
 target_link_libraries(polyline_simplification
