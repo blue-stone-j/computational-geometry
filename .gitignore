@@ -3,3 +3,4 @@ build
 /polyline_simplification/ps.json
 /polyline_simplification/poly.json
 res.cpp
+.vs

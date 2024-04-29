@@ -1,5 +1,6 @@
 #include <iostream>
 #include <cmath>
+#include <vector>
 
 // 将角度标准化到[0, 2π]范围
 double normalizeAngle(double angle)
@@ -34,13 +35,45 @@ double calculateMidpointAngle(double theta1, double theta2)
   return normalizeAngle(midAngle);
 }
 
+double calculateAverageAngle(const std::vector<double> &angles)
+{
+  double sumSin = 0.0, sumCos = 0.0;
+
+  for (double angle : angles)
+  {
+    sumSin += sin(angle);
+    sumCos += cos(angle);
+  }
+
+  double avgX = sumCos / angles.size( );
+  double avgY = sumSin / angles.size( );
+
+  double averageAngle = atan2(avgY, avgX);
+
+  // 确保结果在[0, 2π]范围内
+  if (averageAngle < 0)
+  {
+    averageAngle += 2 * M_PI;
+  }
+
+  return averageAngle;
+}
+
 int main( )
 {
-  // 示例：θ1 = 0, θ2 = π / 2
-  double theta1   = -M_PI + 0.2;
-  double theta2   = M_PI - 0.1;
-  double midAngle = calculateMidpointAngle(theta1, theta2);
+  double midAngle;
 
+  // two angles
+  double theta1 = -M_PI + 0.2;
+  double theta2 = M_PI - 0.1;
+  midAngle      = calculateMidpointAngle(theta1, theta2);
+  std::cout << "Midpoint Angle: " << midAngle << " radians" << std::endl;
+
+  // many angles
+  std::vector<double> angles;
+  angles.push_back(theta1);
+  angles.push_back(theta2);
+  midAngle = calculateAverageAngle(angles);
   std::cout << "Midpoint Angle: " << midAngle << " radians" << std::endl;
 
   return 0;
