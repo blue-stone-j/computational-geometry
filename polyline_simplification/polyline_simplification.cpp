@@ -13,7 +13,8 @@ typedef struct Point3D
 {
   Point3D(double xi = 0, double yi = 0, double zi = 0) :
     x(xi), y(yi), z(zi)
-  {}
+  {
+  }
 
   double x;
   double y;
@@ -99,6 +100,7 @@ class PolylineSimplification
     Json::StyledWriter styledWriter;
     fs << styledWriter.write(root);
     fs.close( );
+
     return 0;
   }
   void setPoly(std::vector<Point3D> &points_in)
@@ -148,14 +150,70 @@ class RadialDistance : public PolylineSimplification
  private:
   double tolerrance = 0.5;
 };
+
 class PerpendicularDistance : public PolylineSimplification
 {
+ private:
+  double tolerrance = 0.5;
+  double perpendDis(const Point3D &point, const Point3D &lineStart, const Point3D &lineEnd)
+  {
+    double dx  = lineEnd.x - lineStart.x;
+    double dy  = lineEnd.y - lineStart.y;
+    double dz  = lineEnd.z - lineStart.z;
+    double mag = std::sqrt(dx * dx + dy * dy + dz * dz);
+    if (mag < 0.00001)
+    {
+      return std::sqrt((point.x - lineStart.x) * (point.x - lineStart.x)
+                       + (point.y - lineStart.y) * (point.y - lineStart.y)
+                       + (point.z - lineStart.z) * (point.z - lineStart.z));
+    }
+    double u = ((point.x - lineStart.x) * dx + (point.y - lineStart.y) * dy + (point.z - lineStart.z) * dz) / (mag * mag);
+    Point3D intersect(lineStart.x + u * dx, lineStart.y + u * dy, lineStart.z + u * dz);
+    return std::sqrt((point.x - intersect.x) * (point.x - intersect.x)
+                     + (point.y - intersect.y) * (point.y - intersect.y)
+                     + (point.z - intersect.z) * (point.z - intersect.z));
+  }
+
  public:
   int simplifyBase( )
   {
+    poly_s.clear( );
+    if (poly.size( ) < 2)
+    {
+      poly_s = poly;
+      return 0;
+    }
+    // poly_s.push_back(poly[0]);
+    std::vector<Point3D> tem(3);
+    double dis = 1000;
+    for (size_t i = 2; i < poly.size( ); i++)
+    {
+      if (dis < tolerrance)
+      {
+        tem[1] = poly[i - 1];
+        tem[2] = poly[i];
+      }
+      else
+      {
+        tem[0] = poly[i - 2];
+        tem[1] = poly[i - 1];
+        tem[2] = poly[i];
+        poly_s.push_back(tem[0]);
+      }
+
+      dis = perpendDis(tem[1], tem[0], tem[2]);
+    }
+
+    if (dis > tolerrance)
+    {
+      poly_s.push_back(tem[1]);
+    }
+    poly_s.push_back(tem[2]);
+
     return 0;
   }
 };
+
 class DouglasPeucker : public PolylineSimplification
 {
  public:
@@ -168,7 +226,7 @@ class DouglasPeucker : public PolylineSimplification
 int main(int argc, char const *argv[])
 {
   // std::vector<Point3D> points;
-  int mode = 0;
+  int mode = 1;
   if (argc > 1)
   {
     mode = std::atoi(argv[1]);
@@ -195,5 +253,6 @@ int main(int argc, char const *argv[])
   ps->simplifyBase( );
 
   ps->writePoly("../polyline_simplification/ps.json");
+
   return 0;
 }
