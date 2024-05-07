@@ -1,8 +1,8 @@
 import matplotlib.pyplot as plt
 import json
 
-# json_path = './ps.json'
-json_path = './poly.json'
+json_path = './ps.json'
+# json_path = './poly.json'
 # 读取之前保存的带噪声的点数据
 with open(json_path, 'r') as file:
     points_loaded = json.load(file)

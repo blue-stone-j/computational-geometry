@@ -8,7 +8,7 @@ Widget::Widget(QWidget *parent) :
   ui->setupUi(this);
   QDesktopWidget *desktopWidget = QApplication::desktop( );
 
-  QFile qssfile("./asserts/qss/blue.qss");
+  QFile qssfile("./assets/qss/blue.qss");
   qssfile.open(QFile::ReadOnly);
   QString qssstr = qssfile.readAll( );
   qssfile.close( );
@@ -72,7 +72,7 @@ void Widget::paintEvent(QPaintEvent *e)
   p.setBrush(QColor(255, 255, 255));
   int w = this->width( );
   int h = this->height( );
-  p.drawImage(QRectF(0, 0, w, h), QImage("./asserts/img/4.png"));
+  p.drawImage(QRectF(0, 0, w, h), QImage("./assets/img/4.png"));
   p.drawRoundRect(box, 1, 1);
   QPen pen;
   // 演示

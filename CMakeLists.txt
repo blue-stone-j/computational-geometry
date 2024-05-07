@@ -16,10 +16,10 @@ include_directories(
 
 # set(TARGET_LIBRARIES "")
 # list(APPEND TARGET_LIBRARIES ${PCL_LIBRARIES})
-add_executable(min_arc arc/min_arc/min_arc.cpp)
-add_executable(midpoint_angle arc/midpoint_angle/midpoint_angle.cpp)
+add_executable(min_arc test/arc/min_arc_node.cpp)
+add_executable(midpoint_angle test/arc/midpoint_angle_node.cpp)
 
-add_executable(polyline_simplification polyline_simplification/polyline_simplification.cpp)
-target_link_libraries(polyline_simplification
-  ${JSONCPP_LIBRARIES}
-)
+add_executable(perpendicular_bisector test/line/perpendicular_bisector_node.cpp)
+
+add_executable(polyline_simplification test/polyline_simplification/polyline_simplification_node.cpp)
+target_link_libraries(polyline_simplification ${JSONCPP_LIBRARIES})

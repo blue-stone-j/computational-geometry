@@ -1,6 +1,8 @@
 build
 /install
-/polyline_simplification/ps.json
-/polyline_simplification/poly.json
+
+ps.json
+poly.json
+
 res.cpp
 .vs

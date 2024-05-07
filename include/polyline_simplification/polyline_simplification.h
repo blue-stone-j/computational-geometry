@@ -1,13 +1,11 @@
+#ifndef POLY_SIMPLIFY_H
+#define POLY_SIMPLIFY_H
+
 #include <vector>
 #include <math.h>
 #include <iostream>
 #include <fstream>
 #include <json/json.h>
-
-/*
- This code was developed by Alan Soares
- Github - https://github.com/alanssoares
-*/
 
 typedef struct Point3D
 {
@@ -223,36 +221,4 @@ class DouglasPeucker : public PolylineSimplification
   }
 };
 
-int main(int argc, char const *argv[])
-{
-  // std::vector<Point3D> points;
-  int mode = 1;
-  if (argc > 1)
-  {
-    mode = std::atoi(argv[1]);
-  }
-  PolylineSimplification *ps;
-  switch (mode)
-  {
-    case 0:
-      ps = new RadialDistance( );
-      break;
-    case 1:
-      ps = new PerpendicularDistance( );
-      break;
-    case 2:
-      ps = new DouglasPeucker( );
-      break;
-    default:
-      ps = new RadialDistance( );
-      break;
-  }
-
-  ps->readPoly("../polyline_simplification/poly.json");
-
-  ps->simplifyBase( );
-
-  ps->writePoly("../polyline_simplification/ps.json");
-
-  return 0;
-}
+#endif
