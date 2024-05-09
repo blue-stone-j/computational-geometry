@@ -107,6 +107,8 @@ class PolylineSimplification
   }
 
   virtual int simplifyBase( ) = 0;
+
+  double tolerance = 0.5;
 };
 
 class RadialDistance : public PolylineSimplification
@@ -130,7 +132,7 @@ class RadialDistance : public PolylineSimplification
     {
       point      = poly[i];
       sqDistance = getDistancePointToPoint(point, prevPoint);
-      if (sqDistance > tolerrance)
+      if (sqDistance > tolerance)
       {
         poly_s.push_back(point);
         prevPoint = point;
@@ -146,13 +148,11 @@ class RadialDistance : public PolylineSimplification
   }
 
  private:
-  double tolerrance = 0.5;
 };
 
 class PerpendicularDistance : public PolylineSimplification
 {
  private:
-  double tolerrance = 0.5;
   double perpendDis(const Point3D &point, const Point3D &lineStart, const Point3D &lineEnd)
   {
     double dx  = lineEnd.x - lineStart.x;
@@ -186,7 +186,7 @@ class PerpendicularDistance : public PolylineSimplification
     double dis = 1000;
     for (size_t i = 2; i < poly.size( ); i++)
     {
-      if (dis < tolerrance)
+      if (dis < tolerance)
       {
         tem[1] = poly[i - 1];
         tem[2] = poly[i];
@@ -202,7 +202,7 @@ class PerpendicularDistance : public PolylineSimplification
       dis = perpendDis(tem[1], tem[0], tem[2]);
     }
 
-    if (dis > tolerrance)
+    if (dis > tolerance)
     {
       poly_s.push_back(tem[1]);
     }
@@ -217,7 +217,83 @@ class DouglasPeucker : public PolylineSimplification
  public:
   int simplifyBase( )
   {
+    tolerance = 0.1;
+    poly_s.clear( );
+    if (poly.size( ) < 2)
+    {
+      poly_s = poly;
+      return 0;
+    }
+    poly_s.push_back(poly.front( ));
+    poly_s = simplifyDPStep(poly, 1, poly.size( ), tolerance, poly_s);
+    poly_s.push_back(poly.back( ));
+
     return 0;
+  }
+  std::vector<Point3D> simplifyDPStep(std::vector<Point3D> points, int first, int last, double tolerance,
+                                      std::vector<Point3D> simplified)
+  {
+    double maxSqDist = tolerance;
+    int index        = -1;
+
+    for (int i = first + 1; i < last; i++)
+    {
+      double sqDist = getDistancePointToSegment(points[i], points[first], points[last]);
+      if (sqDist > maxSqDist)
+      {
+        index     = i;
+        maxSqDist = sqDist;
+      }
+    }
+
+    if (maxSqDist > tolerance)
+    {
+      if (index - first > 1)
+      {
+        simplified = simplifyDPStep(points, first, index, tolerance, simplified);
+      }
+
+      simplified.push_back(points[index]);
+
+      if (last - index > 1)
+      {
+        simplified = simplifyDPStep(points, index, last, tolerance, simplified);
+      }
+    }
+
+    return simplified;
+  }
+  double getDistancePointToSegment(Point3D p, Point3D p1, Point3D p2)
+  {
+    double x  = p1.x,
+           y  = p1.y,
+           z  = p1.z,
+           dx = p2.x - x,
+           dy = p2.y - y,
+           dz = p2.z - z;
+
+    if (dx != 0 || dy != 0 || dz != 0)
+    {
+      double t = ((p.x - x) * dx + (p.y - y) * dy + (p.z - z) * dz) / (pow(dx, 2) + pow(dy, 2) + pow(dz, 2));
+      if (t > 1.0)
+      {
+        x = p2.x;
+        y = p2.y;
+        z = p2.z;
+      }
+      else if (t > 0.0)
+      {
+        x += dx * t;
+        y += dy * t;
+        z += dz * t;
+      }
+    }
+
+    dx = p.x - x;
+    dy = p.y - y;
+    dz = p.z - z;
+
+    return pow(dx, 2) + pow(dy, 2) + pow(dz, 2);
   }
 };
 
