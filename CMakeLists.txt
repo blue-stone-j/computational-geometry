@@ -32,3 +32,6 @@ target_link_libraries(polyline_simplification ${JSONCPP_LIBRARIES})
 add_executable(convex_hull2d test/convex_hull/convex_hull2d_node.cpp)
 target_include_directories(convex_hull2d PUBLIC ${EIGEN3_INCLUDE_DIR} ${CMAKE_CURRENT_SOURCE_DIR}/include)
 target_link_libraries(convex_hull2d Eigen3::Eigen)
+
+add_executable(alpha_shape test/alpha_shape_node.cpp src/alpha_shape.cpp)
+target_include_directories(alpha_shape PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/include)

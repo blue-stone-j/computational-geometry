@@ -85,6 +85,7 @@
     "qdebug": "cpp",
     "qimage": "cpp",
     "qvector3d": "cpp",
-    "qwidget": "cpp"
+    "qwidget": "cpp",
+    "dense": "cpp"
   }
 }
