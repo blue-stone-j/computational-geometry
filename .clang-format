@@ -183,7 +183,7 @@ SpaceBeforeParens: ControlStatements
 # SpaceBeforeRangeBasedForLoopColon: true
 
 # 在空的圆括号中添加空格
-SpaceInEmptyParentheses: true
+SpaceInEmptyParentheses: false
 
 # 在尾随的评论前添加的空格数(只适用于//)
 SpacesBeforeTrailingComments: 1

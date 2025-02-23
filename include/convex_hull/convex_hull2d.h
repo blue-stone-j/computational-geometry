@@ -27,31 +27,15 @@ class PointCloud
   std::vector<float> points_height;
   size_t size( ) const { return points.size( ); }
   bool empty( ) { return points.empty( ); }
-  void push_back(PointT pt, float height = std::numeric_limits<float>::max( ))
-  {
-    points.push_back(pt);
-    points_height.push_back(height);
-  }
-  void clear( )
-  {
-    points.clear( );
-    points_height.clear( );
-  }
-  void resize(size_t size)
-  {
-    points.resize(size);
-    points_height.resize(size, std::numeric_limits<float>::max( ));
-  }
-  void reserve(size_t size)
-  {
-    points.reserve(size);
-    points_height.reserve(size);
-  }
+  void push_back(PointT pt, float height = std::numeric_limits<float>::max( ));
+  void clear( );
+  void resize(size_t size);
+  void reserve(size_t size);
 
-  PointT &at(size_t pos) { return points[pos]; }
-  const PointT &at(size_t pos) const { return points[pos]; }
-  PointT &operator[](size_t pos) { return points[pos]; }
-  const PointT &operator[](size_t pos) const { return points[pos]; }
+  PointT &at(size_t pos);
+  const PointT &at(size_t pos) const;
+  PointT &operator[](size_t pos);
+  const PointT &operator[](size_t pos) const;
 };
 
 template <class CLOUD_IN_TYPE, class CLOUD_OUT_TYPE>

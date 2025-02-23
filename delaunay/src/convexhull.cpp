@@ -22,7 +22,7 @@ bool ConvexHull::IsLeftPoint(Point pt, Line line)
   {
     return false;
   }
-  else if (tmp < 0)
+  else // (tmp < 0)
   {
     return true;
   }

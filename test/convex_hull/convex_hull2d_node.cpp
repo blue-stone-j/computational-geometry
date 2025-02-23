@@ -1,9 +1,10 @@
 #include "convex_hull/convex_hull2d.h"
+#include "src/convex_hull/convex_hull2d.hpp"
 
 typedef Point2D<float> PointF;
 typedef PointCloud<PointF> PointFCloud;
 
-int main( )
+int main()
 {
   ConvexHull2D<PointFCloud, PointFCloud> convex_hull_2d;
   PointFCloud pointcloud_in, pointcloud_out;
@@ -29,14 +30,14 @@ int main( )
 
 
   flag = false;
-  pointcloud_out.clear( );
+  pointcloud_out.clear();
   float distance_above_ground_thres = -1.0f;
   flag                              = convex_hull_2d.GetConvexHullWithoutGround(pointcloud_in,
-                                                                                distance_above_ground_thres,
-                                                                                &pointcloud_out);
+                                                   distance_above_ground_thres,
+                                                   &pointcloud_out);
 
 
-  pointcloud_out.clear( );
+  pointcloud_out.clear();
   float distance_beneath_head_thres = 10.0f;
 
   flag = convex_hull_2d.GetConvexHullWithoutGroundAndHead(pointcloud_in,
@@ -46,12 +47,12 @@ int main( )
 
   distance_above_ground_thres = 10.0f;
   distance_beneath_head_thres = -10.0f;
-  pointcloud_out.clear( );
+  pointcloud_out.clear();
   flag = convex_hull_2d.GetConvexHullWithoutGround(pointcloud_in,
                                                    distance_above_ground_thres,
                                                    &pointcloud_out);
 
-  pointcloud_out.clear( );
+  pointcloud_out.clear();
   flag = convex_hull_2d.GetConvexHullWithoutGroundAndHead(pointcloud_in,
                                                           distance_above_ground_thres,
                                                           distance_beneath_head_thres,
@@ -64,13 +65,13 @@ int main( )
   pt.x                        = 15.5f;
   pt.y                        = 5.5f;
   pointcloud_in.push_back(pt);
-  pointcloud_out.clear( );
+  pointcloud_out.clear();
   flag = convex_hull_2d.GetConvexHullWithoutGround(pointcloud_in,
                                                    distance_above_ground_thres,
                                                    &pointcloud_out);
 
 
-  pointcloud_out.clear( );
+  pointcloud_out.clear();
   flag = convex_hull_2d.GetConvexHullWithoutGroundAndHead(pointcloud_in,
                                                           distance_above_ground_thres,
                                                           distance_beneath_head_thres,
