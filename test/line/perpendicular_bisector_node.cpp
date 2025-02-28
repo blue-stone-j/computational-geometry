@@ -1,3 +1,4 @@
+
 #include "line/perpendicular_bisector.h"
 
 int main(int argc, char const *argv[])

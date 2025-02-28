@@ -1,3 +1,6 @@
+
+#include <iostream>
+
 #include "line/perpendicular_bisector.h"
 
 
@@ -16,13 +19,13 @@ void findPerpendicularBisector(const Point &A, const Point &B)
   // 判断线段是否垂直
   if (A.x == B.x)
   {
-    cout << "中垂线方程是 x = " << M.x << endl;
+    std::cout << "中垂线方程是 x = " << M.x << std::endl;
   }
   else
   {
     slope                     = (B.y - A.y) / (B.x - A.x);
     double perpendicularSlope = -1 / slope;
     // 使用点斜式方程 y - y1 = m(x - x1)
-    cout << "中垂线方程是 y - " << M.y << " = " << perpendicularSlope << "(x - " << M.x << ")" << endl;
+    std::cout << "中垂线方程是 y - " << M.y << " = " << perpendicularSlope << "(x - " << M.x << ")" << std::endl;
   }
 }

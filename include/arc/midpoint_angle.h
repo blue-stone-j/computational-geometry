@@ -1,7 +1,6 @@
 #ifndef MIDPOINT_ANGLE_H
 #define MIDPOINT_ANGLE_H
 
-#include <iostream>
 #include <cmath>
 #include <vector>
 

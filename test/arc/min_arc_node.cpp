@@ -1,7 +1,11 @@
+#include <iostream>
+#include <vector>
+#include <algorithm>
+
 #include "arc/min_arc.h"
 
 // 主程序
-int main( )
+int main()
 {
   // 假设三个点的坐标
   std::vector<std::pair<double, double>> points = {
@@ -11,24 +15,24 @@ int main( )
   };
 
   std::vector<std::pair<int, double>> angles_vec;
-  for (size_t i = 0; i < points.size( ); i++)
+  for (size_t i = 0; i < points.size(); i++)
   {
     angles_vec.push_back(std::pair<int, double>(i, getAngle(points[i].first, points[i].second)));
   }
 
   // 按角度排序
-  std::sort(angles_vec.begin( ), angles_vec.end( ), [](const std::pair<int, double> &a, const std::pair<int, double> &b) { return a.second < b.second; });
-  std::vector<double> angles(points.size( ), 0);
-  for (size_t i = 0; i < angles_vec.size( ); i++)
+  std::sort(angles_vec.begin(), angles_vec.end(), [](const std::pair<int, double> &a, const std::pair<int, double> &b) { return a.second < b.second; });
+  std::vector<double> angles(points.size(), 0);
+  for (size_t i = 0; i < angles_vec.size(); i++)
   {
     angles[i] = angles_vec[i].second;
   }
   // 寻找最大间隔
   double maxGap   = 0;
   int maxGapIndex = -1;
-  for (size_t i = 0; i < angles.size( ); ++i)
+  for (size_t i = 0; i < angles.size(); ++i)
   {
-    double gap = i == angles.size( ) - 1 ?
+    double gap = i == angles.size() - 1 ?
                      angles[0] + 2 * M_PI - angles[i] : // 循环到第一个点
                      angles[i + 1] - angles[i];
     if (gap > maxGap)
@@ -39,7 +43,7 @@ int main( )
   }
 
   // 计算圆弧的起点和终点角度
-  double startAngle = maxGapIndex == angles.size( ) - 1 ? angles[0] : angles[maxGapIndex + 1];
+  double startAngle = maxGapIndex == angles.size() - 1 ? angles[0] : angles[maxGapIndex + 1];
   double endAngle   = angles[maxGapIndex];
 
   // 打印结果

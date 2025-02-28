@@ -3,8 +3,6 @@
 
 #include <vector>
 #include <math.h>
-#include <iostream>
-#include <fstream>
 #include <json/json.h>
 
 struct Point3D

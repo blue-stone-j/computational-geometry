@@ -1,3 +1,7 @@
+
+#include <iostream>
+#include <fstream>
+
 #include "polyline_simplification/polyline_simplification.h"
 
 double PolylineSimplification::getDistancePointToPoint(Point3D p1, Point3D p2)
