@@ -1,7 +1,7 @@
-#include "convex_hull/convex_hull2d.h"
+#ifndef CLOUD_DEFINITION_HPP
+#define CLOUD_DEFINITION_HPP
 
-template struct Point2D<float>;
-template class PointCloud<Point2D<float>>;
+#include "cloud_definition.h"
 
 template <typename PointT>
 void PointCloud<PointT>::push_back(PointT pt, float height)
@@ -11,17 +11,17 @@ void PointCloud<PointT>::push_back(PointT pt, float height)
 }
 
 template <typename PointT>
-void PointCloud<PointT>::clear( )
+void PointCloud<PointT>::clear()
 {
-  points.clear( );
-  points_height.clear( );
+  points.clear();
+  points_height.clear();
 }
 
 template <typename PointT>
 void PointCloud<PointT>::resize(size_t size)
 {
   points.resize(size);
-  points_height.resize(size, std::numeric_limits<float>::max( ));
+  points_height.resize(size, std::numeric_limits<float>::max());
 }
 
 template <typename PointT>
@@ -54,3 +54,5 @@ const PointT &PointCloud<PointT>::operator[](size_t pos) const
 {
   return points[pos];
 }
+
+#endif
