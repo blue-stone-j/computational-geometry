@@ -11,6 +11,13 @@ void PointCloud<PointT>::push_back(PointT pt, float height)
 }
 
 template <typename PointT>
+void PointCloud<PointT>::emplace_back(PointT pt, float height)
+{
+  points.emplace_back(pt);
+  points_height.emplace_back(height);
+}
+
+template <typename PointT>
 void PointCloud<PointT>::clear()
 {
   points.clear();

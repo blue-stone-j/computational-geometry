@@ -1,3 +1,5 @@
+// Description: 2D convex hull algorithm.
+
 #ifndef CONVEX_HULL_2D
 #define CONVEX_HULL_2D
 

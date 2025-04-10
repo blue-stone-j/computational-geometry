@@ -15,6 +15,8 @@ class PointCloud
   size_t size() const { return points.size(); }
   bool empty() { return points.empty(); }
   void push_back(PointT pt, float height = std::numeric_limits<float>::max());
+  void emplace_back(PointT pt, float height = std::numeric_limits<float>::max());
+  void pop_back();
   void clear();
   void resize(size_t size);
   void reserve(size_t size);
@@ -25,6 +27,8 @@ class PointCloud
   const PointT &operator[](size_t pos) const;
 };
 
+template class PointCloud<Point2D<int>>;
 template class PointCloud<Point2D<float>>;
+template class PointCloud<Point2D<double>>;
 
 #endif
